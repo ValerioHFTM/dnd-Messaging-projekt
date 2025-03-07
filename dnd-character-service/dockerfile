@@ -1,0 +1,14 @@
+# 1. Use official OpenJDK 17 as the base image
+FROM eclipse-temurin:17-jre
+
+# 2. Set the working directory
+WORKDIR /app
+
+# 3. Copy the Quarkus-built JAR from the correct folder
+COPY target/dnd-character-service-1.0.0-SNAPSHOT-runner.jar /app/application.jar
+
+# 4. Expose the HTTP port (8080 for Character Service)
+EXPOSE 8080
+
+# 5. Start the application
+CMD ["java", "-jar", "/app/application.jar"]
