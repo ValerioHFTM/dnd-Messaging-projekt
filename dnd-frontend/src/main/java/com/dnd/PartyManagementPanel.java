@@ -17,6 +17,9 @@ public class PartyManagementPanel extends JFrame {
     private JButton addCharacterButton;
     private JButton removeCharacterButton;
     private JButton deletePartyButton;
+    private JTextField partyNameField;
+    private JButton createPartyButton;
+
     private static final String BASE_URL = "http://localhost:8080";
 
     public PartyManagementPanel() {
@@ -32,6 +35,9 @@ public class PartyManagementPanel extends JFrame {
         addCharacterButton = new JButton("Charakter hinzufügen");
         removeCharacterButton = new JButton("Charakter entfernen");
         deletePartyButton = new JButton("Party löschen");
+        partyNameField = new JTextField(15);
+        createPartyButton = new JButton("Party erstellen");
+        createPartyButton.addActionListener(e -> createParty());
 
         addCharacterButton.addActionListener(e -> addCharacterToParty());
         removeCharacterButton.addActionListener(e -> removeCharacterFromParty());
@@ -43,6 +49,9 @@ public class PartyManagementPanel extends JFrame {
         topPanel.add(new JLabel("Charakter:"));
         topPanel.add(characterDropdown);
         topPanel.add(addCharacterButton);
+        topPanel.add(new JLabel("Neue Party:"));
+        topPanel.add(partyNameField);
+        topPanel.add(createPartyButton);
 
         add(topPanel, BorderLayout.NORTH);
 
@@ -255,11 +264,16 @@ public class PartyManagementPanel extends JFrame {
             connection.setRequestMethod("DELETE");
 
             int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
+            System.out.println("Response Code: " + responseCode);
+            if (responseCode == 200) {
                 JOptionPane.showMessageDialog(this, "Party '" + selectedParty + "' wurde gelöscht!");
-                loadParties(); // Refresh the dropdown
+                loadCharacters(); // Refresh party list
+                loadParties(); // Refresh the party dropdown immediately
+
             } else {
                 JOptionPane.showMessageDialog(this, "Fehler beim Löschen der Party!");
+                loadCharacters(); // Refresh party list
+                loadParties();
             }
             connection.disconnect();
         } catch (Exception ex) {
@@ -267,4 +281,39 @@ public class PartyManagementPanel extends JFrame {
         }
     }
 
+    private void createParty() {
+        String partyName = partyNameField.getText();
+        if (partyName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Bitte einen Namen für die Party eingeben!");
+            return;
+        }
+
+        try {
+            URL url = new URL(BASE_URL + "/party");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setDoOutput(true);
+
+            String jsonInputString = "{\"name\":\"" + partyName + "\"}";
+            connection.getOutputStream().write(jsonInputString.getBytes());
+
+            int responseCode = connection.getResponseCode();
+
+            System.out.println("Response Code: " + responseCode);
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                JOptionPane.showMessageDialog(this, "Party " + partyName + " wurde erstellt!");
+                partyNameField.setText(""); // Clear input
+                loadCharacters(); // Refresh party list
+                loadParties(); // Refresh the party dropdown immediately
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Party");
+                loadParties();
+            }
+            connection.disconnect();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Fehler beim Verbinden mit dem Server!");
+        }
+    }
 }

@@ -108,7 +108,9 @@ public class PartyResource {
         if (party == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("Party not found").build();
         }
+
         partyRepository.delete(party);
-        return Response.ok().entity("Party deleted successfully").build();
+        return Response.ok().entity("Party " + partyName + " deleted").build();
     }
+
 }
