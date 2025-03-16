@@ -14,6 +14,11 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import org.jboss.logging.Logger;
+
+import java.time.Duration;
+import java.time.Instant;
+
 import java.util.List;
 
 @Path("/characters")
@@ -22,12 +27,18 @@ import java.util.List;
 @Tag(name = "Character API", description = "Verwaltung von D&D-Charakteren")
 public class CharacterResource {
 
+    private static final Logger LOG = Logger.getLogger(CharacterResource.class);
+
     @Inject
     CharacterRepository repository;
 
     @GET
     public List<CharacterEntity> getAllCharacters() {
-        return repository.listAll();
+        Instant start = Instant.now();
+        List<CharacterEntity> characters = repository.listAll();
+        Instant end = Instant.now();
+        LOG.info("GET /characters took " + Duration.between(start, end).toMillis() + " ms");
+        return characters;
     }
 
     @GET
