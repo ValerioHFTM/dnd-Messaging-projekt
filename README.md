@@ -95,10 +95,30 @@ SELECT * FROM characterentity WHERE name = 'Thalindor';
  ---
  ---
  
+ # Vertiefung
+
+build
+```
+cd dnd-character-service/
+./mvnw clean package -DskipTests -Dquarkus.package.type=uber-jar
+cd ..
+ docker compose build --no-cache
+ docker compose up -d
+ ```
+
+## Backend Erweiterungen
+
+- Create Party (POST /party)
+- Get Party (GET /party/{name})
+- Add Character to Party (PUT /party/{partyName}/add-character/{characterName})
+- Remove Character from Party (PUT /party/{partyName}/remove-character/{characterName})
+- Delete Party (DELETE /party/{name})
  
  
  
- 
+ ---
+ ---
+ ---
  
  # DnD Service (Service A)
 

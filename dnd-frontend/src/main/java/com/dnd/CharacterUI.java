@@ -16,14 +16,20 @@ public class CharacterUI extends JFrame {
         JButton createButton = new JButton("Charakter erstellen");
         JButton showButton = new JButton("Charaktere anzeigen");
         JButton partyButton = new JButton("Party verwalten");
+        JButton manageMobsButton = new JButton("Manage Mob Races");
+        JButton spawnMobsButton = new JButton("Spawn Mobs");
 
         createButton.addActionListener(e -> openCharacterCreatePanel());
         showButton.addActionListener(e -> openCharacterListPanel());
         partyButton.addActionListener(e -> openPartyManagementPanel());
+        manageMobsButton.addActionListener(e -> openMobRacePanel());
+        spawnMobsButton.addActionListener(e -> openMobSpawnPanel());
 
         buttonPanel.add(createButton);
         buttonPanel.add(showButton);
         buttonPanel.add(partyButton);
+        buttonPanel.add(manageMobsButton);
+        buttonPanel.add(spawnMobsButton);
 
         add(buttonPanel, BorderLayout.NORTH);
         setVisible(true);
@@ -43,5 +49,13 @@ public class CharacterUI extends JFrame {
 
     public static void main(String[] args) {
         new CharacterUI();
+    }
+
+    private void openMobRacePanel() {
+        new MobPanel();
+    }
+
+    private void openMobSpawnPanel() {
+        new MobSpawnPanel();
     }
 }

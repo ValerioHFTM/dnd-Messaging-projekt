@@ -15,7 +15,7 @@ public class PartyEntity {
 
     @ManyToMany
     @JoinTable(name = "party_characters", joinColumns = @JoinColumn(name = "party_id"), inverseJoinColumns = @JoinColumn(name = "character_id"))
-    private List<CharacterEntity> members = new ArrayList<>();
+    public List<CharacterEntity> members = new ArrayList<>();
 
     // ✅ Getters & Setters
     public Long getId() {
